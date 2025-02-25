@@ -5,10 +5,10 @@ import subprocess
 # Specify the full path to the WinRAR executable
 WINRAR_PATH = r"C:\Program Files\WinRAR\WinRAR.exe"
 
-# Function to delete buildX.rar files except build.rar (case-insensitive)
+# Function to delete BuildX.rar files except Build.rar (case-insensitive)
 def delete_buildx_rar_files(folder_path):
     try:
-        # Use glob to find all files matching the pattern "build*.rar" (case-insensitive)
+        # Use glob to find all files matching the pattern "Build*.rar" (case-insensitive)
         rar_files = glob.glob(os.path.join(folder_path, "[bB]uild*.rar"))
         
         # Iterate through the matched files
@@ -16,7 +16,7 @@ def delete_buildx_rar_files(folder_path):
             # Extract the file name from the full path
             file_name = os.path.basename(rar_file)
             
-            # Skip "build.rar" (case-insensitive) and delete all other "buildX.rar" files
+            # Skip "Build.rar" (case-insensitive) and delete all other "BuildX.rar" files
             if file_name.lower() != "build.rar":
                 os.remove(rar_file)
                 print(f"Deleted: {file_name}")
@@ -27,16 +27,16 @@ def delete_buildx_rar_files(folder_path):
 
 # Main function to process the folder
 def process_folder(folder_path):
-    # Step 1: Check for .rar files starting with "build" (case-insensitive)
+    # Step 1: Check for .rar files starting with "Build" (case-insensitive)
     rar_files = [f for f in os.listdir(folder_path) if f.lower().startswith("build") and f.endswith(".rar")]
 
     if rar_files:
         print(f"Found .rar files: {rar_files}")
 
-        # Step 2: Delete all buildX.rar files except build.rar
+        # Step 2: Delete all BuildX.rar files except Build.rar
         delete_buildx_rar_files(folder_path)
 
-        # Step 3: Rename build.rar to build1.rar if it exists (case-insensitive)
+        # Step 3: Rename Build.rar to Build1.rar if it exists (case-insensitive)
         build_rar_path = None
         for rar_file in rar_files:
             if rar_file.lower() == "build.rar":
@@ -44,25 +44,25 @@ def process_folder(folder_path):
                 break
 
         if build_rar_path:
-            new_name = os.path.join(folder_path, "build1.rar")
+            new_name = os.path.join(folder_path, "Build1.rar")  # Output in capital letters
             os.rename(build_rar_path, new_name)
-            print(f"Renamed {os.path.basename(build_rar_path)} to build1.rar")
+            print(f"Renamed {os.path.basename(build_rar_path)} to Build1.rar")
         else:
-            print("build.rar not found.")
+            print("Build.rar not found.")
 
-        # Step 4: Add Build folder to build1.rar
+        # Step 4: Add Build folder to Build1.rar
         build_folder = os.path.join(folder_path, "Build")
         if os.path.exists(build_folder):
-            subprocess.run([WINRAR_PATH, "a", "-r", os.path.join(folder_path, "build.rar"), build_folder])
-            print(f"Added Build folder to build1.rar")
+            subprocess.run([WINRAR_PATH, "a", "-r", os.path.join(folder_path, "Build.rar"), build_folder])
+            print(f"Added Build folder to Build.rar")
         else:
             print("Build folder not found.")
     else:
-        # If no .rar files starting with "build", directly add Build folder to build.rar
+        # If no .rar files starting with "Build", directly add Build folder to Build.rar
         build_folder = os.path.join(folder_path, "Build")
         if os.path.exists(build_folder):
-            subprocess.run([WINRAR_PATH, "a", "-r", os.path.join(folder_path, "build.rar"), build_folder])
-            print(f"Added Build folder to build.rar")
+            subprocess.run([WINRAR_PATH, "a", "-r", os.path.join(folder_path, "Build.rar"), build_folder])
+            print(f"Added Build folder to Build.rar")
         else:
             print("Build folder not found.")
 
