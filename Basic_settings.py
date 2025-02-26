@@ -3,8 +3,10 @@ import ctypes
 import sys
 
 # Define variables
-site_name = "Hallmark"
-app_pool_name = "Hallmark_24022025"
+client_name = "Hallmark"
+date = "24022025"
+app_pool_name = f"{client_name}_{date}"
+site_name = client_name
 application_name = "OCRWEBAPI"
 
 # Function to check if the script is running as administrator

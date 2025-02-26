@@ -66,6 +66,9 @@ def process_folder(folder_path):
         else:
             print("Build folder not found.")
 
+# Define client name
+client_name = "hallmark"
+
 # Example usage
-folder_path = r"C:\Production1\hallmark"  # Replace with the actual path to your folder
+folder_path = fr"C:\Production1\{client_name}"  # Replace with the actual path to your folder
 process_folder(folder_path)

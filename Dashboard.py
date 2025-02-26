@@ -1,11 +1,28 @@
 import re
+import os
 
 # Define the client name
-client_name = "pink"
+client_name = "hallmark"  # This can be in any case (e.g., "pink", "Pink", "PINK")
 
-# Define the paths to the files
-dashboard_new_path = r"C:\Production2\Hallmark\Build\Dashboard_New\js\dashboard_New.js"
-dashboard_new_chart_path = r"C:\Production2\Hallmark\Build\Dashboard_New\js\Dashboard_NewCharts.js"
+# Function to find the correct case of the client_name in the path
+def find_correct_case_path(base_path, client_name):
+    # Get the list of directories in the base path
+    if os.path.exists(base_path):
+        for dir_name in os.listdir(base_path):
+            # Compare case-insensitively
+            if dir_name.lower() == client_name.lower():
+                return os.path.join(base_path, dir_name)
+    raise FileNotFoundError(f"Directory for client '{client_name}' not found in '{base_path}'")
+
+# Define the base path
+base_path = r"C:\Production2"
+
+# Find the correct case of the client_name in the base path
+client_path = find_correct_case_path(base_path, client_name)
+
+# Define the paths to the files using the correct case of client_name
+dashboard_new_path = os.path.join(client_path, "Build", "Dashboard_New", "js", "dashboard_New.js")
+dashboard_new_chart_path = os.path.join(client_path, "Build", "Dashboard_New", "js", "Dashboard_NewCharts.js")
 
 # Function to modify the file content
 def modify_file_content(file_path, client_name):

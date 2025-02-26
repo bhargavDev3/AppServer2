@@ -1,10 +1,14 @@
-client_name = "pink"
+# Define the client name and site
+client_name = "Hallmark"
 client_site = f"https://{client_name}.nimbleproperty.net"
 
-so i will provide you some paths and also do some modifications in path files ok
-OCR_management= "C:\Production2\Hallmark\Build\OCR\OCRManagement.js"
-step1: in this    var apiurl = 'http://www.navaccounting.com:82/OCRWEBAPI/api';  replace this with client_site provided above ok, example :- var apiurl = '{client_site}/OCRWEBAPI/api';
-step2: in this var host = 'http://www.navaccounting.com:82'; replace this with client_site provided above ok, example :- var host = '{client_site}';
+# Define the paths to the OCR files
+OCR_management = r"C:\Production2\Hallmark\Build\OCR\OCRManagement.js"
+OCR_mapping = r"C:\Production2\Hallmark\Build\OCR\OCRFiles\Scripts\Mapping.js"
 
 
-OCR_mapping= "C:\Production2\Hallmark\Build\OCR\OCRFiles\Scripts\Mapping.js"
+can you rewrite the paths using client_name? example 
+
+OCR_management = r"C:\Production2\{client_name}\Build\OCR\OCRManagement.js"
+OCR_mapping = r"C:\Production2\{client_name}\Build\OCR\OCRFiles\Scripts\Mapping.js"
+
