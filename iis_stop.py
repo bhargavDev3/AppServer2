@@ -1,7 +1,9 @@
 import subprocess
 import ctypes
 import sys
-site_name="Hallmark"
+
+client_name = "Hallmark"
+site_name = client_name 
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()

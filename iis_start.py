@@ -2,7 +2,8 @@ import subprocess
 import ctypes
 import sys
 
-site_name = "Hallmark"  # Replace with your site name
+client_name = "Hallmark"
+site_name = client_name  # Replace with your site name
 
 def is_admin():
     try:

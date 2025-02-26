@@ -4,7 +4,7 @@ import sys
 
 # Define variables
 client_name = "Hallmark"
-date = "24022025"
+date = "26022025"
 app_pool_name = f"{client_name}_{date}"
 site_name = client_name
 application_name = "OCRWEBAPI"
