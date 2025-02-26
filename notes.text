@@ -1,0 +1,11 @@
+client_name = "pink"
+client_site = f"https://{client_name}.nimbleproperty.net"
+
+so i will provide you some paths and also do some modifications in path files ok
+
+
+dashboard_New= "C:\Production2\Hallmark\Build\Dashboard_New\js\dashboard_New.js"
+in this 
+step1: there is -> var api_server_ip = "https://stagingdashboardapi.nimbleproperty.net";   here remove  staging like this->  var api_server_ip = "https://dashboardapi.nimbleproperty.net";
+
+step2: this is -> var client = "STAGING1";  replace "STAGING1" with client name exanple:- var client = "pink";

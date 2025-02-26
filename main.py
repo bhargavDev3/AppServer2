@@ -1,83 +1,34 @@
-import os
-import shutil
+import re
 
-def clean_directory(path1):
-    # Ensure the path exists
-    if not os.path.exists(path1):
-        print(f"The path {path1} does not exist.")
-        return
+# Define the client name
+client_name = "pink"
 
-    # Iterate over all items in the directory
-    for item in os.listdir(path1):
-        item_path = os.path.join(path1, item)
-        
-        # Skip the MailContent folder and Web.config file
-        if item == "MailContent" or item == "Web.config":
-            print(f"Skipping {item}")
-            continue
-        
-        # Remove the item
-        try:
-            if os.path.isfile(item_path) or os.path.islink(item_path):
-                os.unlink(item_path)
-                print(f"Deleted file: {item}")
-            elif os.path.isdir(item_path):
-                shutil.rmtree(item_path)
-                print(f"Deleted folder: {item}")
-        except Exception as e:
-            print(f"Failed to delete {item}. Reason: {e}")
+# Define the paths to the files
+dashboard_new_path = r"C:\Production2\Hallmark\Build\Dashboard_New\js\dashboard_New.js"
+dashboard_new_chart_path = r"C:\Production2\Hallmark\Build\Dashboard_New\js\Dashboard_NewCharts.js"
 
-# Example usage
-path1 = "C:/Production1/Hallmark/Build"  # Replace with your actual path
-clean_directory(path1)
+# Function to modify the file content
+def modify_file_content(file_path, client_name):
+    # Read the content of the file
+    with open(file_path, 'r') as file:
+        content = file.read()
 
+    # Step 1: Remove "staging" from the api_server_ip variable
+    content = re.sub(r'var api_server_ip = "https://stagingdashboardapi\.nimbleproperty\.net";', 
+                     r'var api_server_ip = "https://dashboardapi.nimbleproperty.net";', 
+                     content)
 
-import os
-import shutil
-import time
+    # Step 2: Replace "STAGING1" with the client name
+    content = re.sub(r'var client = "STAGING1";', 
+                     f'var client = "{client_name}";', 
+                     content)
 
-# Define paths
-path1 = r"C:/Production1/Hallmark/Build"
-path2 = r"C:/Production_release/NewBuild_13022025/NewBuild"
+    # Write the modified content back to the file
+    with open(file_path, 'w') as file:
+        file.write(content)
 
-def update_timestamp(path):
-    """Update the last modified timestamp of a file or folder to the current time."""
-    current_time = time.time()
-    os.utime(path, (current_time, current_time))
+    print(f"File '{file_path}' has been updated successfully.")
 
-def copy_except_excluded(path2, path1):
-    # Ensure both paths exist
-    if not os.path.exists(path2):
-        print(f"Source path {path2} does not exist.")
-        return
-    if not os.path.exists(path1):
-        print(f"Destination path {path1} does not exist.")
-        return
-
-    # Iterate over all items in the source directory (path2)
-    for item in os.listdir(path2):
-        source_item_path = os.path.join(path2, item)
-        destination_item_path = os.path.join(path1, item)
-
-        # Skip the MailContent folder and Web.config file
-        if item == "MailContent" or item == "Web.config":
-            print(f"Skipping {item}")
-            continue
-
-        # Copy the item
-        try:
-            if os.path.isfile(source_item_path):
-                shutil.copy2(source_item_path, destination_item_path)
-                print(f"Copied file: {item}")
-            elif os.path.isdir(source_item_path):
-                shutil.copytree(source_item_path, destination_item_path)
-                print(f"Copied folder: {item}")
-
-            # Update the last modified timestamp to the current time
-            update_timestamp(destination_item_path)
-            print(f"Updated timestamp for: {item}")
-        except Exception as e:
-            print(f"Failed to copy {item}. Reason: {e}")
-
-# Call the function
-copy_except_excluded(path2, path1)
+# Modify both files
+modify_file_content(dashboard_new_path, client_name)
+modify_file_content(dashboard_new_chart_path, client_name)
