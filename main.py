@@ -1,60 +1,83 @@
-import subprocess
-import ctypes
-import sys
+import os
+import shutil
 
-# Define variables
-site_name = "Hallmark"
-app_pool_name = "Hallmark_24022025"
-application_name = "OCRWEBAPI"
+def clean_directory(path1):
+    # Ensure the path exists
+    if not os.path.exists(path1):
+        print(f"The path {path1} does not exist.")
+        return
 
-# Function to check if the script is running as administrator
-def is_admin():
-    try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
-    except:
-        return False
+    # Iterate over all items in the directory
+    for item in os.listdir(path1):
+        item_path = os.path.join(path1, item)
+        
+        # Skip the MailContent folder and Web.config file
+        if item == "MailContent" or item == "Web.config":
+            print(f"Skipping {item}")
+            continue
+        
+        # Remove the item
+        try:
+            if os.path.isfile(item_path) or os.path.islink(item_path):
+                os.unlink(item_path)
+                print(f"Deleted file: {item}")
+            elif os.path.isdir(item_path):
+                shutil.rmtree(item_path)
+                print(f"Deleted folder: {item}")
+        except Exception as e:
+            print(f"Failed to delete {item}. Reason: {e}")
 
-# Function to run a command with elevated privileges
-def run_elevated_command(command):
-    try:
-        result = subprocess.run(command, shell=True, capture_output=True, text=True, check=True)
-        print("Command output:", result.stdout)
-        if result.stderr:
-            print("Command error:", result.stderr)
-        return True
-    except subprocess.CalledProcessError as e:
-        print(f"Error: {e.stderr}")
-        return False
+# Example usage
+path1 = "C:/Production1/Hallmark/Build"  # Replace with your actual path
+clean_directory(path1)
 
-# Function to change the application pool for the root application of the site
-def change_root_app_pool(site_name, app_pool_name):
-    command = f'%windir%\\system32\\inetsrv\\appcmd.exe set app /app.name:"{site_name}/" /applicationPool:"{app_pool_name}"'
-    print(f"Changing application pool for root application of site '{site_name}' to '{app_pool_name}'...")
-    if run_elevated_command(command):
-        print(f"Successfully changed application pool for root application of site '{site_name}'.")
-    else:
-        print(f"Failed to change application pool for root application of site '{site_name}'.")
 
-# Function to change the application pool for the application
-def change_app_app_pool(site_name, application_name, app_pool_name):
-    command = f'%windir%\\system32\\inetsrv\\appcmd.exe set app /app.name:"{site_name}/{application_name}" /applicationPool:"{app_pool_name}"'
-    print(f"Changing application pool for application '{application_name}' to '{app_pool_name}'...")
-    if run_elevated_command(command):
-        print(f"Successfully changed application pool for application '{application_name}'.")
-    else:
-        print(f"Failed to change application pool for application '{application_name}'.")
+import os
+import shutil
+import time
 
-# Main script
-if __name__ == "__main__":
-    # Check if the script is running as administrator
-    if not is_admin():
-        # Re-run the script with elevated privileges
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
-    else:
-        # Change the application pool for the root application of the site
-        change_root_app_pool(site_name, app_pool_name)
+# Define paths
+path1 = r"C:/Production1/Hallmark/Build"
+path2 = r"C:/Production_release/NewBuild_13022025/NewBuild"
 
-        # Change the application pool for the application
-        change_app_app_pool(site_name, application_name, app_pool_name)
+def update_timestamp(path):
+    """Update the last modified timestamp of a file or folder to the current time."""
+    current_time = time.time()
+    os.utime(path, (current_time, current_time))
 
-        print("Process completed.")
+def copy_except_excluded(path2, path1):
+    # Ensure both paths exist
+    if not os.path.exists(path2):
+        print(f"Source path {path2} does not exist.")
+        return
+    if not os.path.exists(path1):
+        print(f"Destination path {path1} does not exist.")
+        return
+
+    # Iterate over all items in the source directory (path2)
+    for item in os.listdir(path2):
+        source_item_path = os.path.join(path2, item)
+        destination_item_path = os.path.join(path1, item)
+
+        # Skip the MailContent folder and Web.config file
+        if item == "MailContent" or item == "Web.config":
+            print(f"Skipping {item}")
+            continue
+
+        # Copy the item
+        try:
+            if os.path.isfile(source_item_path):
+                shutil.copy2(source_item_path, destination_item_path)
+                print(f"Copied file: {item}")
+            elif os.path.isdir(source_item_path):
+                shutil.copytree(source_item_path, destination_item_path)
+                print(f"Copied folder: {item}")
+
+            # Update the last modified timestamp to the current time
+            update_timestamp(destination_item_path)
+            print(f"Updated timestamp for: {item}")
+        except Exception as e:
+            print(f"Failed to copy {item}. Reason: {e}")
+
+# Call the function
+copy_except_excluded(path2, path1)
