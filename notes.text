@@ -2,10 +2,9 @@ client_name = "pink"
 client_site = f"https://{client_name}.nimbleproperty.net"
 
 so i will provide you some paths and also do some modifications in path files ok
+OCR_management= "C:\Production2\Hallmark\Build\OCR\OCRManagement.js"
+step1: in this    var apiurl = 'http://www.navaccounting.com:82/OCRWEBAPI/api';  replace this with client_site provided above ok, example :- var apiurl = '{client_site}/OCRWEBAPI/api';
+step2: in this var host = 'http://www.navaccounting.com:82'; replace this with client_site provided above ok, example :- var host = '{client_site}';
 
 
-dashboard_New= "C:\Production2\Hallmark\Build\Dashboard_New\js\dashboard_New.js"
-in this 
-step1: there is -> var api_server_ip = "https://stagingdashboardapi.nimbleproperty.net";   here remove  staging like this->  var api_server_ip = "https://dashboardapi.nimbleproperty.net";
-
-step2: this is -> var client = "STAGING1";  replace "STAGING1" with client name exanple:- var client = "pink";
+OCR_mapping= "C:\Production2\Hallmark\Build\OCR\OCRFiles\Scripts\Mapping.js"
